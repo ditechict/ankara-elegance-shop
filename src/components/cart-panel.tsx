@@ -49,6 +49,9 @@ const PROVIDER_LABEL: Record<Provider, string> = {
   whatsapp: "WhatsApp order routing",
 };
 
+/** Naira card settlement is not live yet, so NGN orders route on WhatsApp. */
+const CARD_CURRENCY = "GBP";
+
 function buildWhatsAppMessage(order: CheckoutResult, routing: Routing, provider: Provider) {
   const money = (n: number) => formatMoney(n, order.currency);
   return [
@@ -113,8 +116,12 @@ export function CartPanel() {
     }
   }, [cartOpen]);
 
-  const cardProvider: Provider = currency === "NGN" ? "paystack" : "stripe";
-  const provider: Provider = payWithCard ? cardProvider : "whatsapp";
+  const cardAvailable = currency === CARD_CURRENCY;
+  const provider: Provider = payWithCard && cardAvailable ? "stripe" : "whatsapp";
+
+  useEffect(() => {
+    if (!cardAvailable) setPayWithCard(false);
+  }, [cardAvailable]);
 
   const routingComplete =
     routing.name.trim() !== "" &&
