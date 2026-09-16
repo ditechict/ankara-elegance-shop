@@ -128,7 +128,7 @@ export function CartPanel() {
     routing.phone.trim().length >= 7 &&
     routing.city.trim() !== "" &&
     routing.address.trim() !== "" &&
-    (!payWithCard || /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(routing.email.trim()));
+    (provider === "whatsapp" || /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(routing.email.trim()));
 
   const delivery = lines.length ? DELIVERY_FEE[currency] : 0;
   const total = subtotal + delivery;
