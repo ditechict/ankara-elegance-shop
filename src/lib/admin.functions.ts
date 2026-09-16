@@ -64,9 +64,17 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
       ["new", "confirmed", "packed", "dispatched"].includes(row.fulfilment_status),
     );
 
+    const exceptions = rows.filter(
+      (row: { last_payment_error: string | null; payment_status: string }) =>
+        Boolean(row.last_payment_error) || row.payment_status === "failed",
+    );
+
     return {
       orders: rows,
+      exceptions,
+      failedEvents: failedEvents ?? [],
       metrics: {
+        exceptions: exceptions.length,
         total: rows.length,
         newOrders: rows.filter((row: { fulfilment_status: string }) => row.fulfilment_status === "new").length,
         unpaid: unpaid.length,
