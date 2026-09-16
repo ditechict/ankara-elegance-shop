@@ -49,10 +49,43 @@ export interface Product {
 }
 
 export const BRAND = {
-  handle: "3kbelowankara",
-  whatsapp: "2348000000000",
-  instagram: "https://www.instagram.com/3kbelowankara",
+  name: "Gedhe Couture",
+  handle: "Gedhe Couture",
+  positioning: "A fashion company creating and curating stylish pieces for the modern woman.",
+  whatsapp: "2348032227986",
+  whatsappDisplay: "+234 803 222 7986",
 } as const;
+
+/** Three verticals, one standard of finish — all owned by Gedhe Couture. */
+export const VERTICALS: {
+  key: Category;
+  label: string;
+  blurb: string;
+  instagram: string | null;
+  handle: string | null;
+}[] = [
+  {
+    key: "Fabrics",
+    label: "The Edit Co. RTW.",
+    blurb: "Ankara fabrics and ready-to-wear — 3-yard cotton wax bundles, cut and finished in-house.",
+    instagram: "https://www.instagram.com/theeditco.rtw",
+    handle: "theeditco.rtw",
+  },
+  {
+    key: "Ready-to-Wear",
+    label: "The Edit Co.",
+    blurb: "Curated thrift and vintage fashion — one-of-one pieces, inspected and steamed before dispatch.",
+    instagram: "https://www.instagram.com/theeditco.ng",
+    handle: "theeditco.ng",
+  },
+  {
+    key: "Asoebi",
+    label: "Affordable Asoebi Bulk Supply",
+    blurb: "Event coordination specials — volume pricing and timeline planning, arranged on WhatsApp.",
+    instagram: null,
+    handle: null,
+  },
+];
 
 /** Delivery fee per currency. */
 export const DELIVERY_FEE: Record<Currency, number> = { NGN: 3500, GBP: 18 };
