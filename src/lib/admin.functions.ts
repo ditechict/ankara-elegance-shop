@@ -151,7 +151,10 @@ export const updateAdminProduct = createServerFn({ method: "POST" })
   .handler(async ({ data, context }) => {
     await requireAdmin(context);
     const { id, ...changes } = data;
-    const { error } = await context.supabase.from("products").update(changes).eq("id", id);
+    // zod has already validated the shape; the DB column type is JSON, so the
+    // gallery/volume_tiers arrays are compatible at runtime.
+    const update = changes as unknown as import("@/integrations/supabase/types").Database["public"]["Tables"]["products"]["Update"];
+    const { error } = await context.supabase.from("products").update(update).eq("id", id);
     if (error) throw new Error("Could not save the product.");
     return { ok: true };
   });
