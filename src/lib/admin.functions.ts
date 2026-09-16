@@ -107,7 +107,7 @@ export const updateAdminOrder = createServerFn({ method: "POST" })
       if (!allowed[current.fulfilment_status]?.includes(data.fulfilment_status)) throw new Error("That fulfilment transition is not allowed.");
     }
 
-    const update: Record<string, unknown> = {};
+    const update: { fulfilment_status?: string; admin_notes?: string } = {};
     if (data.fulfilment_status) update.fulfilment_status = data.fulfilment_status;
     if (data.admin_notes !== undefined) update.admin_notes = data.admin_notes;
     const { error } = await context.supabase.from("orders").update(update).eq("id", data.id);
