@@ -332,13 +332,38 @@ export function CartPanel() {
               >
                 Continue shopping
               </button>
-              <Link
-                to="/order-return"
-                search={{ token: placed.lookupToken } as never}
-                className="mt-3 block text-center text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-              >
-                Check payment status with your token
-              </Link>
+              <div className="mt-5 border border-border bg-secondary p-4">
+                <p className="text-eyebrow text-muted-foreground">Your payment token</p>
+                <p className="mt-2 break-all font-mono text-[11px] leading-relaxed">
+                  {placed.lookupToken}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void navigator.clipboard.writeText(placed.lookupToken);
+                      toast.success("Payment token copied");
+                    }}
+                    className="rounded-full border border-foreground/20 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] transition-colors hover:border-gold"
+                  >
+                    Copy token
+                  </button>
+                  <Link
+                    to="/order/$token"
+                    params={{ token: placed.lookupToken }}
+                    className="rounded-full border border-foreground/20 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] transition-colors hover:border-gold"
+                  >
+                    View order status
+                  </Link>
+                </div>
+                <p className="mt-3 text-[10px] leading-relaxed text-muted-foreground">
+                  Keep this token safe — it is the only way to check this order at{" "}
+                  <Link to="/order-return" className="underline underline-offset-2">
+                    /order-return
+                  </Link>
+                  . It expires in 30 days.
+                </p>
+              </div>
               <p className="mt-3 flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
                 <Lock className="h-3 w-3" /> Details stored securely · Never resold
               </p>
