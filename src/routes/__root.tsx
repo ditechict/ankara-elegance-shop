@@ -79,18 +79,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "3kbelowankara — Affordable Ankara, Premium Heritage" },
+      { title: "Gedhe Couture — Ankara, Thrift & Asoebi Bulk" },
       {
         name: "description",
         content:
-          "Premium 100% cotton Ankara fabrics, ready-to-wear and asoebi bulk supply from 3kbelowankara.",
+          "Gedhe Couture creates and curates stylish pieces for the modern woman across three verticals: Ankara ready-to-wear, curated thrift and asoebi bulk supply.",
       },
-      { name: "author", content: "3kbelowankara" },
-      { property: "og:title", content: "3kbelowankara — Affordable Ankara, Premium Heritage" },
+      { name: "author", content: "Gedhe Couture" },
+      { property: "og:title", content: "Gedhe Couture — Ankara, Thrift & Asoebi Bulk" },
       {
         property: "og:description",
         content:
-          "Premium 100% cotton Ankara fabrics, ready-to-wear and asoebi bulk supply from 3kbelowankara.",
+          "Gedhe Couture creates and curates stylish pieces for the modern woman across three verticals: Ankara ready-to-wear, curated thrift and asoebi bulk supply.",
       },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
