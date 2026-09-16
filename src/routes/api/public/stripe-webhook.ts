@@ -4,7 +4,6 @@
  * amount/currency must match the server-calculated order total.
  */
 import { createFileRoute } from "@tanstack/react-router";
-import type {} from "@tanstack/start-client-core";
 
 const TOLERANCE_SECONDS = 300;
 
