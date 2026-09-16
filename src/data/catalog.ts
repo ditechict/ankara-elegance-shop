@@ -91,10 +91,10 @@ export const VERTICALS: {
 export const DELIVERY_FEE: Record<Currency, number> = { NGN: 3500, GBP: 18 };
 
 export const CATEGORIES: { key: Category | "All"; label: string; blurb: string }[] = [
-  { key: "All", label: "All Pieces", blurb: "The complete house selection" },
-  { key: "Fabrics", label: "3-Yard Cotton Ankara", blurb: "100% cotton wax print bundles" },
-  { key: "Ready-to-Wear", label: "Ready-To-Wear", blurb: "Bubu gowns & palazzo tailoring" },
-  { key: "Asoebi", label: "Asoebi Bulk", blurb: "Volume pricing for events" },
+  { key: "All", label: "All Pieces", blurb: "The complete Gedhe Couture selection" },
+  { key: "Fabrics", label: "The Edit Co. RTW.", blurb: "Ankara fabrics & ready-to-wear" },
+  { key: "Ready-to-Wear", label: "The Edit Co.", blurb: "Curated thrift & vintage fashion" },
+  { key: "Asoebi", label: "Asoebi Bulk Supply", blurb: "Event coordination specials" },
 ];
 
 /** Bundled house imagery, addressable from database rows as `asset:<file>`. */
