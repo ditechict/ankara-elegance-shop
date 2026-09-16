@@ -3,9 +3,9 @@ import { ArrowDownRight } from "lucide-react";
 import heroImg from "@/assets/hero-ankara.jpg";
 
 const VALUE_MATRIX = [
-  { title: "100% Cotton Fabrics", detail: "3-yard bundles, true wax weave" },
-  { title: "Ready-to-Wear Polish", detail: "Bubu gowns & palazzo tailoring" },
-  { title: "Asoebi Bulk Supply", detail: "Event coordination specialists" },
+  { title: "The Edit Co. RTW.", detail: "Ankara fabrics & ready-to-wear" },
+  { title: "The Edit Co.", detail: "Curated thrift & vintage fashion" },
+  { title: "Asoebi Bulk Supply", detail: "Event coordination specials" },
 ];
 
 export function Hero() {
@@ -13,7 +13,7 @@ export function Hero() {
     <section className="relative isolate overflow-hidden surface-dark">
       <img
         src={heroImg}
-        alt="Model wearing a vibrant Ankara bubu gown from the 3kbelowankara collection"
+        alt="Model wearing a vibrant Ankara bubu gown from the Gedhe Couture collection"
         width={1280}
         height={1600}
         className="absolute inset-0 h-full w-full object-cover object-[50%_28%] opacity-55"
@@ -26,16 +26,16 @@ export function Hero() {
 
       <div className="relative mx-auto flex max-w-7xl flex-col justify-end px-5 pb-10 pt-28 sm:px-8 sm:pb-16 sm:pt-40 lg:min-h-[88vh]">
         <p className="animate-rise text-eyebrow text-gold">
-          Lagos · Ankara Atelier · Since 2019
+          Gedhe Couture · Lagos · Three verticals, one standard of finish
         </p>
         <h1 className="animate-rise mt-5 max-w-3xl font-display text-[2.6rem] font-medium leading-[1.02] tracking-tight text-linen sm:text-6xl lg:text-7xl">
-          Affordable Ankara,
-          <span className="block italic text-gold-soft">Premium Heritage.</span>
+          Stylish pieces for the
+          <span className="block italic text-gold-soft">modern woman.</span>
         </h1>
         <p className="animate-rise mt-5 max-w-xl text-sm leading-relaxed text-linen/75 sm:text-base">
-          Hand-selected cotton wax prints, finished ready-to-wear silhouettes and
-          high-volume asoebi coordination — priced for real life, styled without
-          compromise.
+          One house, three verticals: Ankara fabrics and ready-to-wear, curated thrift and
+          vintage, and affordable asoebi bulk supply — created and curated to the same
+          standard of finish.
         </p>
 
         <div className="animate-rise mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
