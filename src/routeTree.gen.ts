@@ -15,6 +15,7 @@ import { Route as LoginRouteImport } from './routes/login'
 import { Route as OrderReturnRouteImport } from './routes/order-return'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as OrderTokenRouteImport } from './routes/order/$token'
+import { Route as ApiPublicStripeWebhookRouteImport } from './routes/api/public/stripe-webhook'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -46,6 +47,11 @@ const OrderTokenRoute = OrderTokenRouteImport.update({
   path: '/order/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicStripeWebhookRoute = ApiPublicStripeWebhookRouteImport.update({
+  id: '/api/public/stripe-webhook',
+  path: '/api/public/stripe-webhook',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +60,7 @@ export interface FileRoutesByFullPath {
   '/order-return': typeof OrderReturnRoute
   '/order/$token': typeof OrderTokenRoute
   '/admin/': typeof AdminIndexRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/order-return': typeof OrderReturnRoute
   '/order/$token': typeof OrderTokenRoute
   '/admin': typeof AdminIndexRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -70,13 +78,26 @@ export interface FileRoutesById {
   '/order-return': typeof OrderReturnRoute
   '/order/$token': typeof OrderTokenRoute
   '/admin/': typeof AdminIndexRoute
+  '/api/public/stripe-webhook': typeof ApiPublicStripeWebhookRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
-    '/' | '/admin' | '/login' | '/order-return' | '/order/$token' | '/admin/'
+    | '/'
+    | '/admin'
+    | '/login'
+    | '/order-return'
+    | '/order/$token'
+    | '/admin/'
+    | '/api/public/stripe-webhook'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/order-return' | '/order/$token' | '/admin'
+  to:
+    | '/'
+    | '/login'
+    | '/order-return'
+    | '/order/$token'
+    | '/admin'
+    | '/api/public/stripe-webhook'
   id:
     | '__root__'
     | '/'
@@ -85,6 +106,7 @@ export interface FileRouteTypes {
     | '/order-return'
     | '/order/$token'
     | '/admin/'
+    | '/api/public/stripe-webhook'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -93,6 +115,7 @@ export interface RootRouteChildren {
   LoginRoute: typeof LoginRoute
   OrderReturnRoute: typeof OrderReturnRoute
   OrderTokenRoute: typeof OrderTokenRoute
+  ApiPublicStripeWebhookRoute: typeof ApiPublicStripeWebhookRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -139,6 +162,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof OrderTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/stripe-webhook': {
+      id: '/api/public/stripe-webhook'
+      path: '/api/public/stripe-webhook'
+      fullPath: '/api/public/stripe-webhook'
+      preLoaderRoute: typeof ApiPublicStripeWebhookRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -160,6 +190,7 @@ const rootRouteChildren: RootRouteChildren = {
   LoginRoute: LoginRoute,
   OrderReturnRoute: OrderReturnRoute,
   OrderTokenRoute: OrderTokenRoute,
+  ApiPublicStripeWebhookRoute: ApiPublicStripeWebhookRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
