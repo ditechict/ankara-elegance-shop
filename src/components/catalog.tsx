@@ -12,7 +12,7 @@ export function Catalog() {
       <div className="mx-auto max-w-7xl px-5 pt-16 sm:px-8 sm:pt-24">
         <p className="text-eyebrow text-clay">The Catalog</p>
         <h2 className="mt-3 max-w-2xl font-display text-3xl leading-tight tracking-tight sm:text-5xl">
-          Three verticals, one standard of finish.
+          Shop the house edit.
         </h2>
       </div>
 

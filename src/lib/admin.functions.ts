@@ -42,11 +42,19 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     await requireAdmin(context);
-    const { data: orders, error } = await context.supabase
-      .from("orders")
-      .select("id, reference, customer_name, currency, total, payment_provider, payment_status, fulfilment_status, created_at")
-      .order("created_at", { ascending: false })
-      .limit(250);
+    const [{ data: orders, error }, { data: failedEvents }] = await Promise.all([
+      context.supabase
+        .from("orders")
+        .select("id, reference, customer_name, currency, total, payment_provider, payment_status, fulfilment_status, last_payment_error, payment_attempts, created_at")
+        .order("created_at", { ascending: false })
+        .limit(250),
+      context.supabase
+        .from("payment_events")
+        .select("provider, event_id, event_type, order_reference, received_at, processed_at, failure_reason")
+        .not("failure_reason", "is", null)
+        .order("received_at", { ascending: false })
+        .limit(50),
+    ]);
 
     if (error) throw new Error("Could not load orders.");
     const rows = orders ?? [];
@@ -56,9 +64,17 @@ export const getAdminDashboard = createServerFn({ method: "GET" })
       ["new", "confirmed", "packed", "dispatched"].includes(row.fulfilment_status),
     );
 
+    const exceptions = rows.filter(
+      (row: { last_payment_error: string | null; payment_status: string }) =>
+        Boolean(row.last_payment_error) || row.payment_status === "failed",
+    );
+
     return {
       orders: rows,
+      exceptions,
+      failedEvents: failedEvents ?? [],
       metrics: {
+        exceptions: exceptions.length,
         total: rows.length,
         newOrders: rows.filter((row: { fulfilment_status: string }) => row.fulfilment_status === "new").length,
         unpaid: unpaid.length,

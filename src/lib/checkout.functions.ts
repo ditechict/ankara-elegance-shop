@@ -301,3 +301,75 @@ export const getOrderByLookupToken = createServerFn({ method: "GET" })
 
 /** Kept as a compatibility alias for internal callers; it no longer accepts display references. */
 export const getOrderByReference = getOrderByLookupToken;
+
+/**
+ * Restart payment for an existing unpaid card order. The same order row is
+ * reused, so a retry can never create a duplicate order.
+ */
+export const retryOrderPayment = createServerFn({ method: "POST" })
+  .inputValidator((data: unknown) => z.object({ token: z.string().trim().uuid() }).parse(data))
+  .handler(async ({ data }): Promise<{ checkoutUrl: string }> => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const lookupTokenHash = await hashLookupToken(data.token);
+    const { data: order, error } = await supabaseAdmin
+      .from("orders")
+      .select(
+        "id, reference, currency, total, items, customer_email, payment_status, payment_provider, payment_attempts",
+      )
+      .eq("lookup_token_hash", lookupTokenHash)
+      .gt("lookup_expires_at", new Date().toISOString())
+      .is("lookup_revoked_at", null)
+      .maybeSingle();
+    if (error || !order) throw new Error("This payment link is no longer valid.");
+    if (order.payment_status === "paid") throw new Error("This order is already paid.");
+    if (order.payment_provider !== "stripe") {
+      throw new Error("This order is settled with the atelier on WhatsApp.");
+    }
+    if (order.payment_attempts >= 5) {
+      throw new Error("Too many payment attempts. Please contact the atelier on WhatsApp.");
+    }
+
+    const secret = process.env['STRIPE_SECRET_KEY'];
+    if (!secret) throw new Error("Card payment is not configured yet.");
+
+    const body = new URLSearchParams();
+    body.set("mode", "payment");
+    body.set("client_reference_id", order.reference);
+    body.set("metadata[reference]", order.reference);
+    if (order.customer_email) body.set("customer_email", order.customer_email);
+    body.set("success_url", `${originFrom()}/order/${data.token}`);
+    body.set("cancel_url", `${originFrom()}/order/${data.token}?checkout=cancelled`);
+    body.set("line_items[0][quantity]", "1");
+    body.set("line_items[0][price_data][currency]", "gbp");
+    body.set("line_items[0][price_data][unit_amount]", String(Math.round(Number(order.total) * 100)));
+    body.set(
+      "line_items[0][price_data][product_data][name]",
+      `Order ${order.reference} — Gedhe Couture`,
+    );
+
+    const res = await fetch("https://api.stripe.com/v1/checkout/sessions", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${secret}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      body,
+    });
+    const payload = (await res.json()) as { id?: string; url?: string; error?: unknown };
+    if (!res.ok || !payload.url) {
+      console.error("Stripe retry session failed", payload.error ?? payload);
+      throw new Error("Card payment could not be restarted. Please try again.");
+    }
+
+    await supabaseAdmin
+      .from("orders")
+      .update({
+        provider_reference: payload.id ?? null,
+        provider_checkout_url: payload.url,
+        payment_attempts: order.payment_attempts + 1,
+        payment_status: "pending",
+      })
+      .eq("id", order.id);
+
+    return { checkoutUrl: payload.url };
+  });

@@ -7,12 +7,13 @@ import { SiteHeader } from "@/components/site-header";
 import { Hero } from "@/components/hero";
 import { Catalog } from "@/components/catalog";
 import { AsoebiNote } from "@/components/asoebi-note";
+import { Verticals } from "@/components/verticals";
 import { CartPanel } from "@/components/cart-panel";
 import { SiteFooter } from "@/components/site-footer";
 
-const TITLE = "3kbelowankara — Affordable Ankara, Premium Heritage";
+const TITLE = "Gedhe Couture — Ankara, Thrift & Asoebi Bulk";
 const DESCRIPTION =
-  "Shop 100% cotton 3-yard Ankara bundles, ready-to-wear bubu gowns and palazzo trousers, plus asoebi bulk supply with volume pricing. Nationwide delivery from Lagos.";
+  "Gedhe Couture creates and curates stylish pieces for the modern woman: The Edit Co. RTW. Ankara fabrics and ready-to-wear, The Edit Co. curated thrift, and affordable asoebi bulk supply.";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -38,6 +39,7 @@ function Index() {
       <SiteHeader />
       <main>
         <Hero />
+        <Verticals />
         <Catalog />
         <AsoebiNote />
       </main>

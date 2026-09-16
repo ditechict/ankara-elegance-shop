@@ -1,7 +1,9 @@
 /** Sticky brand bar with live cart volume badge. */
 import { ShoppingBag, Instagram } from "lucide-react";
-import { BRAND } from "@/data/catalog";
+import { VERTICALS } from "@/data/catalog";
 import { useStore } from "@/lib/store";
+
+const PRIMARY_SOCIAL = VERTICALS.find((v) => v.instagram);
 
 export function SiteHeader() {
   const { volume, openCart } = useStore();
@@ -11,28 +13,30 @@ export function SiteHeader() {
       <div className="mx-auto grid max-w-7xl grid-cols-[minmax(0,1fr)_auto] items-center gap-4 px-5 py-3.5 sm:px-8">
         <a href="/" className="flex min-w-0 items-center gap-3">
           <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full border border-gold/60 font-display text-sm text-gold">
-            3k
+            GC
           </span>
           <span className="min-w-0">
             <span className="block truncate font-display text-lg leading-none tracking-tight">
-              3kbelow<span className="text-clay">ankara</span>
+              Gedhe <span className="text-clay">Couture</span>
             </span>
             <span className="mt-1 block text-eyebrow text-muted-foreground">
-              Affordable Luxury
+              Three verticals, one standard of finish
             </span>
           </span>
         </a>
 
         <div className="flex shrink-0 items-center gap-1.5">
-          <a
-            href={BRAND.instagram}
-            target="_blank"
-            rel="noreferrer noopener"
-            aria-label="Visit 3kbelowankara on Instagram"
-            className="grid h-10 w-10 place-items-center rounded-full text-foreground/70 transition-colors hover:bg-secondary hover:text-foreground"
-          >
-            <Instagram className="h-[18px] w-[18px]" />
-          </a>
+          {PRIMARY_SOCIAL?.instagram && (
+            <a
+              href={PRIMARY_SOCIAL.instagram}
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label={`Visit ${PRIMARY_SOCIAL.label} on Instagram`}
+              className="grid h-10 w-10 place-items-center rounded-full text-foreground/70 transition-colors hover:bg-secondary hover:text-foreground"
+            >
+              <Instagram className="h-[18px] w-[18px]" />
+            </a>
+          )}
           <button
             type="button"
             onClick={openCart}

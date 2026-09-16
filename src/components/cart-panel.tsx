@@ -49,6 +49,9 @@ const PROVIDER_LABEL: Record<Provider, string> = {
   whatsapp: "WhatsApp order routing",
 };
 
+/** Naira card settlement is not live yet, so NGN orders route on WhatsApp. */
+const CARD_CURRENCY = "GBP";
+
 function buildWhatsAppMessage(order: CheckoutResult, routing: Routing, provider: Provider) {
   const money = (n: number) => formatMoney(n, order.currency);
   return [
@@ -113,15 +116,19 @@ export function CartPanel() {
     }
   }, [cartOpen]);
 
-  const cardProvider: Provider = currency === "NGN" ? "paystack" : "stripe";
-  const provider: Provider = payWithCard ? cardProvider : "whatsapp";
+  const cardAvailable = currency === CARD_CURRENCY;
+  const provider: Provider = payWithCard && cardAvailable ? "stripe" : "whatsapp";
+
+  useEffect(() => {
+    if (!cardAvailable) setPayWithCard(false);
+  }, [cardAvailable]);
 
   const routingComplete =
     routing.name.trim() !== "" &&
     routing.phone.trim().length >= 7 &&
     routing.city.trim() !== "" &&
     routing.address.trim() !== "" &&
-    (!payWithCard || /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(routing.email.trim()));
+    (provider === "whatsapp" || /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(routing.email.trim()));
 
   const delivery = lines.length ? DELIVERY_FEE[currency] : 0;
   const total = subtotal + delivery;
@@ -325,13 +332,38 @@ export function CartPanel() {
               >
                 Continue shopping
               </button>
-              <Link
-                to="/order-return"
-                search={{ token: placed.lookupToken } as never}
-                className="mt-3 block text-center text-[11px] font-bold uppercase tracking-[0.18em] text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
-              >
-                Check payment status with your token
-              </Link>
+              <div className="mt-5 border border-border bg-secondary p-4">
+                <p className="text-eyebrow text-muted-foreground">Your payment token</p>
+                <p className="mt-2 break-all font-mono text-[11px] leading-relaxed">
+                  {placed.lookupToken}
+                </p>
+                <div className="mt-3 flex flex-wrap gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      void navigator.clipboard.writeText(placed.lookupToken);
+                      toast.success("Payment token copied");
+                    }}
+                    className="rounded-full border border-foreground/20 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] transition-colors hover:border-gold"
+                  >
+                    Copy token
+                  </button>
+                  <Link
+                    to="/order/$token"
+                    params={{ token: placed.lookupToken }}
+                    className="rounded-full border border-foreground/20 px-4 py-2 text-[10px] font-bold uppercase tracking-[0.16em] transition-colors hover:border-gold"
+                  >
+                    View order status
+                  </Link>
+                </div>
+                <p className="mt-3 text-[10px] leading-relaxed text-muted-foreground">
+                  Keep this token safe — it is the only way to check this order at{" "}
+                  <Link to="/order-return" className="underline underline-offset-2">
+                    /order-return
+                  </Link>
+                  . It expires in 30 days.
+                </p>
+              </div>
               <p className="mt-3 flex items-center justify-center gap-1.5 text-[10px] uppercase tracking-[0.14em] text-muted-foreground">
                 <Lock className="h-3 w-3" /> Details stored securely · Never resold
               </p>
@@ -510,16 +542,17 @@ export function CartPanel() {
                     </div>
                     <p className="mt-2.5 text-[11px] leading-relaxed text-muted-foreground">
                       {currency === "NGN"
-                        ? "Naira orders are processed by Paystack — card, bank transfer, USSD and Verve."
+                        ? "Naira orders are confirmed with a stylist on WhatsApp — card and transfer settlement in naira is coming soon."
                         : "Pound orders are processed by Stripe — card, Apple Pay and Google Pay."}
                     </p>
                   </div>
 
                   <button
                     type="button"
+                    disabled={!cardAvailable}
                     onClick={() => setPayWithCard(true)}
                     aria-pressed={payWithCard}
-                    className={`flex w-full items-start gap-3 border p-4 text-left transition-colors ${
+                    className={`flex w-full items-start gap-3 border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                       payWithCard ? "border-gold bg-secondary" : "border-border hover:border-foreground/30"
                     }`}
                   >
@@ -528,10 +561,12 @@ export function CartPanel() {
                     />
                     <span className="min-w-0">
                       <span className="block text-sm font-semibold">
-                        Pay now — {PROVIDER_LABEL[cardProvider]}
+                        Pay now — {PROVIDER_LABEL["stripe"]}
                       </span>
                       <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
-                        Secure hosted checkout. Your card details never touch this site.
+                        {cardAvailable
+                          ? "Secure hosted checkout. Your card details never touch this site."
+                          : "Switch your billing region to International · £ to pay by card today."}
                       </span>
                     </span>
                   </button>
@@ -561,7 +596,7 @@ export function CartPanel() {
                       compliant processing
                     </p>
                     <p>
-                      Card details are tokenised by the gateway — 3kbelowankara never sees or stores
+                      Card details are tokenised by the gateway — Gedhe Couture never sees or stores
                       your card number.
                     </p>
                   </div>
