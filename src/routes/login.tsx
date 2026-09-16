@@ -11,10 +11,10 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Admin sign in — 3kbelowankara" },
-      { name: "description", content: "Secure staff sign in for 3kbelowankara order operations." },
-      { property: "og:title", content: "Admin sign in — 3kbelowankara" },
-      { property: "og:description", content: "Secure staff sign in for 3kbelowankara order operations." },
+      { title: "Admin sign in — Gedhe Couture" },
+      { name: "description", content: "Secure staff sign in for Gedhe Couture order operations." },
+      { property: "og:title", content: "Admin sign in — Gedhe Couture" },
+      { property: "og:description", content: "Secure staff sign in for Gedhe Couture order operations." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -55,7 +55,7 @@ function LoginPage() {
               <h1 className="mt-4 max-w-sm font-display text-5xl leading-[0.95] tracking-tight">The atelier, kept in order.</h1>
               <p className="mt-6 max-w-sm text-sm leading-7 text-linen/60">Manage orders, payment state, fulfilment, and the live catalog from one secure workspace.</p>
             </div>
-            <p className="text-xs uppercase tracking-[0.18em] text-linen/35">3kbelowankara · staff access</p>
+            <p className="text-xs uppercase tracking-[0.18em] text-linen/35">Gedhe Couture · staff access</p>
           </div>
           <div className="bg-background p-7 text-foreground sm:p-10">
             <div className="mb-9">
