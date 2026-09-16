@@ -2,7 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { ArrowLeft, Check, CircleDollarSign, ClipboardList, Loader2, LogOut, Package, Pencil, Save, Search, ShieldCheck, X } from "lucide-react";
+import { AlertTriangle, ArrowLeft, Check, CircleDollarSign, ClipboardList, Loader2, LogOut, Package, Pencil, Save, Search, ShieldCheck, X } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -107,6 +107,62 @@ function AdminPage() {
 }
 
 function Metric({ label, value, icon }: { label: string; value: string; icon: React.ReactNode }) { return <Card className="shadow-none"><CardContent className="flex items-start justify-between p-5"><div><p className="text-xs text-muted-foreground">{label}</p><p className="mt-2 text-xl font-semibold tabular-nums">{value}</p></div><span className="text-gold">{icon}</span></CardContent></Card>; }
+
+function ExceptionsPanel({ dashboard, onSelect }: { dashboard: Dashboard; onSelect: (id: string) => void }) {
+  const orders = dashboard.exceptions;
+  const events = dashboard.failedEvents;
+  return (
+    <div className="grid gap-4 lg:grid-cols-2">
+      <Card>
+        <CardHeader className="border-b border-border">
+          <CardTitle>Orders needing attention</CardTitle>
+          <p className="mt-1 text-sm text-muted-foreground">Failed payments, amount mismatches, and abandoned card checkouts.</p>
+        </CardHeader>
+        <CardContent className="p-0">
+          {orders.length === 0 ? (
+            <div className="p-10 text-center"><ShieldCheck className="mx-auto h-8 w-8 text-success" /><p className="mt-3 font-display text-xl">Nothing to reconcile</p><p className="mt-1 text-sm text-muted-foreground">Every payment so far has matched its order.</p></div>
+          ) : (
+            <ul className="divide-y divide-border">
+              {orders.map((order) => (
+                <li key={order.id}>
+                  <button type="button" onClick={() => onSelect(order.id)} className="flex w-full items-start justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-secondary/60">
+                    <span>
+                      <span className="font-semibold">{order.reference}</span>
+                      <span className="mt-1 block text-xs text-muted-foreground">{order.customer_name} · {order.payment_provider} · attempt {order.payment_attempts}</span>
+                      <span className="mt-1 block text-xs text-destructive">{order.last_payment_error ?? "Payment reported as failed"}</span>
+                    </span>
+                    <span className="shrink-0 text-right"><Badge variant="destructive">{order.payment_status}</Badge><span className="mt-1 block text-xs tabular-nums text-muted-foreground">{formatMoney(Number(order.total), order.currency as "NGN" | "GBP")}</span></span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </CardContent>
+      </Card>
+      <Card>
+        <CardHeader className="border-b border-border">
+          <CardTitle>Rejected provider callbacks</CardTitle>
+          <p className="mt-1 text-sm text-muted-foreground">Events received but not applied, with the reason recorded.</p>
+        </CardHeader>
+        <CardContent className="p-0">
+          {events.length === 0 ? (
+            <div className="p-10 text-center"><ShieldCheck className="mx-auto h-8 w-8 text-success" /><p className="mt-3 font-display text-xl">No rejected callbacks</p><p className="mt-1 text-sm text-muted-foreground">All verified payment events applied cleanly.</p></div>
+          ) : (
+            <ul className="divide-y divide-border">
+              {events.map((event) => (
+                <li key={`${event.provider}-${event.event_id}`} className="px-5 py-4 text-sm">
+                  <div className="flex justify-between gap-3"><span className="font-semibold">{event.event_type}</span><span className="text-xs text-muted-foreground">{new Date(event.received_at).toLocaleString()}</span></div>
+                  <p className="mt-1 text-xs text-muted-foreground">{event.provider} · {event.order_reference ?? "no order reference"}</p>
+                  <p className="mt-1 text-xs text-destructive">{event.failure_reason}</p>
+                </li>
+              ))}
+            </ul>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+}
 
 function OrdersTable({ orders, onSelect }: { orders: Order[]; onSelect: (id: string) => void }) { return orders.length === 0 ? <div className="p-10 text-center"><ClipboardList className="mx-auto h-8 w-8 text-muted-foreground" /><p className="mt-3 font-display text-xl">No matching orders</p><p className="mt-1 text-sm text-muted-foreground">New checkout activity will appear here.</p></div> : <div className="overflow-x-auto"><table className="w-full text-sm"><thead><tr className="border-b border-border text-left text-xs uppercase tracking-[0.14em] text-muted-foreground"><th className="px-5 py-3">Order</th><th className="px-5 py-3">Customer</th><th className="px-5 py-3">Payment</th><th className="px-5 py-3">Fulfilment</th><th className="px-5 py-3 text-right">Total</th></tr></thead><tbody>{orders.map((order) => <tr key={order.id} className="cursor-pointer border-b border-border/70 transition-colors last:border-0 hover:bg-secondary/60" onClick={() => onSelect(order.id)}><td className="px-5 py-4 font-semibold">{order.reference}<span className="mt-1 block text-xs font-normal text-muted-foreground">{new Date(order.created_at).toLocaleString()}</span></td><td className="px-5 py-4">{order.customer_name}</td><td className="px-5 py-4"><Badge variant={statusTone[order.payment_status] ?? "outline"}>{order.payment_status}</Badge><span className="ml-2 text-xs text-muted-foreground">{order.payment_provider}</span></td><td className="px-5 py-4 capitalize">{order.fulfilment_status}</td><td className="px-5 py-4 text-right font-semibold tabular-nums">{formatMoney(Number(order.total), order.currency as "NGN" | "GBP")}</td></tr>)}</tbody></table></div>; }
 
