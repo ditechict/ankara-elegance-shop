@@ -85,8 +85,8 @@ function AdminPage() {
         </div>
       </header>
       <main className="mx-auto max-w-[1500px] px-5 py-8 sm:px-8">
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-5"><div><p className="text-eyebrow text-muted-foreground">Today at 3kbelowankara</p><h2 className="mt-2 font-display text-4xl tracking-tight">Good work, keep it moving.</h2></div><Button variant="outline" onClick={() => void refresh()}><ClipboardList /> Refresh data</Button></div>
-        <div className="mb-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-5">
+        <div className="mb-8 flex flex-wrap items-end justify-between gap-5"><div><p className="text-eyebrow text-muted-foreground">Today at Gedhe Couture</p><h2 className="mt-2 font-display text-4xl tracking-tight">Good work, keep it moving.</h2></div><Button variant="outline" onClick={() => void refresh()}><ClipboardList /> Refresh data</Button></div>
+        <div className="mb-8 grid gap-3 sm:grid-cols-2 xl:grid-cols-6">
           <Metric label="All orders" value={String(dashboard.metrics.total)} icon={<ClipboardList />} />
           <Metric label="New orders" value={String(dashboard.metrics.newOrders)} icon={<Package />} />
           <Metric label="Unpaid" value={String(dashboard.metrics.unpaid)} icon={<ShieldCheck />} />
