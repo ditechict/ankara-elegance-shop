@@ -120,7 +120,7 @@ function ExceptionsPanel({ dashboard, onSelect }: { dashboard: Dashboard; onSele
         </CardHeader>
         <CardContent className="p-0">
           {orders.length === 0 ? (
-            <div className="p-10 text-center"><ShieldCheck className="mx-auto h-8 w-8 text-success" /><p className="mt-3 font-display text-xl">Nothing to reconcile</p><p className="mt-1 text-sm text-muted-foreground">Every payment so far has matched its order.</p></div>
+            <div className="p-10 text-center"><ShieldCheck className="mx-auto h-8 w-8 text-gold" /><p className="mt-3 font-display text-xl">Nothing to reconcile</p><p className="mt-1 text-sm text-muted-foreground">Every payment so far has matched its order.</p></div>
           ) : (
             <ul className="divide-y divide-border">
               {orders.map((order) => (
@@ -146,7 +146,7 @@ function ExceptionsPanel({ dashboard, onSelect }: { dashboard: Dashboard; onSele
         </CardHeader>
         <CardContent className="p-0">
           {events.length === 0 ? (
-            <div className="p-10 text-center"><ShieldCheck className="mx-auto h-8 w-8 text-success" /><p className="mt-3 font-display text-xl">No rejected callbacks</p><p className="mt-1 text-sm text-muted-foreground">All verified payment events applied cleanly.</p></div>
+            <div className="p-10 text-center"><ShieldCheck className="mx-auto h-8 w-8 text-gold" /><p className="mt-3 font-display text-xl">No rejected callbacks</p><p className="mt-1 text-sm text-muted-foreground">All verified payment events applied cleanly.</p></div>
           ) : (
             <ul className="divide-y divide-border">
               {events.map((event) => (
