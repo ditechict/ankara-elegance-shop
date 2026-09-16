@@ -517,16 +517,17 @@ export function CartPanel() {
                     </div>
                     <p className="mt-2.5 text-[11px] leading-relaxed text-muted-foreground">
                       {currency === "NGN"
-                        ? "Naira orders are processed by Paystack — card, bank transfer, USSD and Verve."
+                        ? "Naira orders are confirmed with a stylist on WhatsApp — card and transfer settlement in naira is coming soon."
                         : "Pound orders are processed by Stripe — card, Apple Pay and Google Pay."}
                     </p>
                   </div>
 
                   <button
                     type="button"
+                    disabled={!cardAvailable}
                     onClick={() => setPayWithCard(true)}
                     aria-pressed={payWithCard}
-                    className={`flex w-full items-start gap-3 border p-4 text-left transition-colors ${
+                    className={`flex w-full items-start gap-3 border p-4 text-left transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${
                       payWithCard ? "border-gold bg-secondary" : "border-border hover:border-foreground/30"
                     }`}
                   >
@@ -535,10 +536,12 @@ export function CartPanel() {
                     />
                     <span className="min-w-0">
                       <span className="block text-sm font-semibold">
-                        Pay now — {PROVIDER_LABEL[cardProvider]}
+                        Pay now — {PROVIDER_LABEL["stripe"]}
                       </span>
                       <span className="mt-0.5 block text-xs leading-relaxed text-muted-foreground">
-                        Secure hosted checkout. Your card details never touch this site.
+                        {cardAvailable
+                          ? "Secure hosted checkout. Your card details never touch this site."
+                          : "Switch your billing region to International · £ to pay by card today."}
                       </span>
                     </span>
                   </button>
@@ -568,7 +571,7 @@ export function CartPanel() {
                       compliant processing
                     </p>
                     <p>
-                      Card details are tokenised by the gateway — 3kbelowankara never sees or stores
+                      Card details are tokenised by the gateway — Gedhe Couture never sees or stores
                       your card number.
                     </p>
                   </div>
