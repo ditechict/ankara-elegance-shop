@@ -19,10 +19,10 @@ import { supabase } from "@/integrations/supabase/client";
 export const Route = createFileRoute("/admin/")({
   head: () => ({
     meta: [
-      { title: "Operations dashboard — 3kbelowankara" },
-      { name: "description", content: "Secure order, payment, fulfilment, and catalog operations for 3kbelowankara." },
-      { property: "og:title", content: "Operations dashboard — 3kbelowankara" },
-      { property: "og:description", content: "Secure order, payment, fulfilment, and catalog operations for 3kbelowankara." },
+      { title: "Operations dashboard — Gedhe Couture" },
+      { name: "description", content: "Secure order, payment, fulfilment, and catalog operations for Gedhe Couture." },
+      { property: "og:title", content: "Operations dashboard — Gedhe Couture" },
+      { property: "og:description", content: "Secure order, payment, fulfilment, and catalog operations for Gedhe Couture." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -40,6 +40,7 @@ function AdminPage() {
   const navigate = useNavigate();
   const loadDashboard = useServerFn(getAdminDashboard);
   const loadProducts = useServerFn(listAdminProducts);
+  const openOrder = useServerFn(getAdminOrder);
   const [dashboard, setDashboard] = useState<Dashboard | null>(null);
   const [products, setProducts] = useState<Product[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Awaited<ReturnType<typeof getAdminOrder>> | null>(null);
