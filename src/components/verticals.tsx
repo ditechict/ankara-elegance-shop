@@ -8,17 +8,8 @@ export function Verticals() {
 
   return (
     <section id="house" className="scroll-mt-16 border-t border-border">
-      <div className="mx-auto max-w-7xl px-5 py-16 sm:px-8 sm:py-24">
-        <p className="text-eyebrow text-clay">The House</p>
-        <h2 className="mt-3 max-w-2xl font-display text-3xl leading-tight tracking-tight sm:text-5xl">
-          Three verticals, one standard of finish.
-        </h2>
-        <p className="mt-4 max-w-2xl text-sm leading-relaxed text-muted-foreground">
-          {BRAND.positioning} Each vertical runs its own edit and its own audience, while sourcing,
-          quality control, payment and dispatch are handled centrally by {BRAND.name}.
-        </p>
-
-        <div className="mt-10 grid gap-5 sm:grid-cols-3">
+      <div className="mx-auto max-w-7xl px-5 py-8 sm:px-8 sm:py-12">
+        <div className="grid gap-5 sm:grid-cols-3">
           {VERTICALS.map((vertical, index) => (
             <article
               key={vertical.key}

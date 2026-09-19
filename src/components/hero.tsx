@@ -1,12 +1,6 @@
-/** Premium editorial hero with value-proposition matrix + magnetic CTA. */
+/** Premium editorial hero with magnetic CTA. */
 import { ArrowDownRight } from "lucide-react";
 import heroImg from "@/assets/hero-ankara.jpg";
-
-const VALUE_MATRIX = [
-  { title: "The Edit Co. RTW.", detail: "Ankara fabrics & ready-to-wear" },
-  { title: "The Edit Co.", detail: "Curated thrift & vintage fashion" },
-  { title: "Asoebi Bulk Supply", detail: "Event coordination specials" },
-];
 
 export function Hero() {
   return (
@@ -51,14 +45,6 @@ export function Hero() {
           </span>
         </div>
 
-        <dl className="mt-12 grid gap-px overflow-hidden rounded-sm border border-linen/15 bg-linen/10 sm:grid-cols-3">
-          {VALUE_MATRIX.map((item) => (
-            <div key={item.title} className="bg-charcoal-deep/70 px-5 py-5 backdrop-blur-sm">
-              <dt className="font-display text-base text-linen">{item.title}</dt>
-              <dd className="mt-1.5 text-xs leading-relaxed text-linen/60">{item.detail}</dd>
-            </div>
-          ))}
-        </dl>
       </div>
     </section>
   );
