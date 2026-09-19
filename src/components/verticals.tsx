@@ -16,7 +16,7 @@ export function Verticals() {
               className="flex flex-col border border-border bg-card p-6 transition-colors hover:border-gold"
             >
               <p className="font-display text-4xl tracking-tight text-clay">
-                0{index + 1}
+                {"\n"}
               </p>
               <h3 className="mt-4 font-display text-xl leading-tight tracking-tight">
                 {vertical.label}
