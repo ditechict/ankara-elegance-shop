@@ -43,8 +43,8 @@ You are taking over an in-flight build of **Gedhe Couture**, a production storef
 ## 4. Brand and UI/UX standard — this is the bar, hold it
 
 - **Gedhe Couture** is the parent brand: "a fashion company creating and curating stylish pieces for the modern woman." Three verticals under one line, "Three verticals, one standard of finish":
-  - **The Edit Co. RTW.** — @theeditco.rtw — Ankara fabrics and ready-to-wear
-  - **The Edit Co.** — @theeditco.ng — curated thrift and vintage
+  - **Ankara Fabrics and ready-to-wear** — @theeditco.rtw
+  - **Curated Thrift & Vintage fashion** — @theeditco.ng
   - **Affordable Asoebi Bulk Supply** — no Instagram account
 - WhatsApp everywhere: **+234 803 222 7986**. All brand constants live in `src/data/catalog.ts` (`BRAND`, `VERTICALS`, `CATEGORIES`) — never hardcode them in components.
 - Visual language: editorial, high-contrast, serif headings over clean sans body; deep charcoal / soft linen with burnished gold and clay terracotta accents. Edge-to-edge product imagery, restrained motion.
@@ -68,23 +68,27 @@ You are taking over an in-flight build of **Gedhe Couture**, a production storef
 ## 6. State at handoff
 
 - Storefront, verticals section, cart panel, order-return page, token order page, admin dashboard (orders / payment exceptions / products editor), and admin sign-in are implemented and building clean.
-- A real Stripe test-card order was verified end to end: hosted checkout → signed webhook → order flipped to `paid`. A tampered signature was rejected with 401, a replayed event was idempotent, and a wrong-amount event refused to mark the order paid.
+- The hero summary strip and the verticals intro copy ("The House" heading and paragraph) were removed at the owner's request; the three vertical cards and their actions remain.
+- The TanStack package alignment is complete (`@tanstack/react-start@1.168.56`, `@tanstack/react-router@1.170.38`, `@tanstack/router-plugin@1.168.40`); the type check is clean.
+- A real Stripe test-card order was verified end to end: hosted checkout → signed webhook → order flipped to `paid`. A tampered signature was rejected with 401, a replayed event was idempotent, and a wrong-amount event refused to mark the order paid. That verification predates the package update — re-verify (task 2).
 - An admin account exists (`admin@gedhecouture.com`) with an `admin` row in `user_roles`. No profile data, by design.
 - Four temporary catalog products remain in the database, awaiting real inventory from the owner.
+- The "useStore must be used inside <StoreProvider>" runtime report was a stale hot-reload snapshot taken mid-edit, not a code fault — the page already wraps every cart-state consumer in the provider.
 
 ## 7. Open work — task list, in order
 
-1. **Fix the type-check failure in `src/routes/api/public/stripe-webhook.ts`.** Two `TS7031` errors on the `request` binding. Root cause is a version mismatch: `@tanstack/react-router@1.170.36` vs `@tanstack/react-start@1.168.52`, where `start-client-core` bundles its own `router-core@1.171.29`, so route type augmentation never reaches the instance in use. Align the packages in one coordinated update, then re-run the type check and a full build. Do **not** paper over it with `any` or `@ts-ignore`. Runtime behaviour must stay identical — re-verify the webhook afterwards with a signed, a tampered, and a replayed event.
-2. **Run the security scan** and report results. Fix only what is genuinely actionable; leave the two closed order/payment insert-policy findings closed.
-3. **Collect real inventory from the owner** — per vertical: names, prices in NGN and GBP, options and option label, minimum quantity, Asoebi volume tiers, stock status, and photos. Then replace the four temporary products through the admin products editor path (the schema already supports all of it). Do not invent product data.
-4. **Harden the fulfilment workflow**: enforce New → Confirmed → Packed → Dispatched → Delivered (+ Cancelled) server-side and reject invalid jumps; record every change in `order_audit_events` with the acting admin.
-5. **Order export** for fulfilment and accounting, admin-authenticated only, PII limited to authenticated admins.
-6. **Revenue reporting split by NGN and GBP** — never a blended total.
-7. **Customer notification hooks** on payment confirmation and fulfilment milestones, designed so email or WhatsApp can be switched on later without exposing private data.
-8. **Asoebi event-date and quantity capture** at checkout, with an urgency indicator in the dashboard for production timelines.
-9. **Catalogue change history** for price and volume-tier edits, to prevent silent pricing disputes.
-10. **Low-stock and "inquire for timeline" alerts** surfaced in the operations dashboard.
-11. **Paystack**, only when the owner asks: mirror the Stripe webhook contract exactly — raw-body `x-paystack-signature` verification, same idempotency, same amount/currency gate.
+1. **Add a menu bar** to `src/components/site-header.tsx` (the sticky brand bar) for navigating between catalogs and back home: Home, plus the three catalog entries from `VERTICALS` in `src/data/catalog.ts` — Ankara Fabrics and ready-to-wear, Curated Thrift & Vintage fashion, Affordable Asoebi Bulk Supply. Selecting a catalog entry applies that category filter and scrolls to the catalog section (same behaviour as the existing "Shop this edit" buttons); Home scrolls to top. Collapse gracefully on phone widths (Instagram is the traffic source) — e.g. a hamburger revealing the same entries. Semantic design tokens only; the existing Instagram and Bag controls stay.
+2. **Re-verify the Stripe webhook at runtime** after the TanStack package update — a signed event marks the order paid, a tampered signature is rejected with 401, a replayed event is idempotent, and a wrong-amount event does not mark paid. The type check already passes; no code change expected unless verification finds one. Do **not** paper over anything with `any` or `@ts-ignore`.
+3. **Run the security scan** and report results. Fix only what is genuinely actionable; leave the two closed order/payment insert-policy findings closed.
+4. **Collect real inventory from the owner** — per vertical: names, prices in NGN and GBP, options and option label, minimum quantity, Asoebi volume tiers, stock status, and photos. Then replace the four temporary products through the admin products editor path (the schema already supports all of it). Do not invent product data.
+5. **Harden the fulfilment workflow**: enforce New → Confirmed → Packed → Dispatched → Delivered (+ Cancelled) server-side and reject invalid jumps; record every change in `order_audit_events` with the acting admin.
+6. **Order export** for fulfilment and accounting, admin-authenticated only, PII limited to authenticated admins.
+7. **Revenue reporting split by NGN and GBP** — never a blended total.
+8. **Customer notification hooks** on payment confirmation and fulfilment milestones, designed so email or WhatsApp can be switched on later without exposing private data.
+9. **Asoebi event-date and quantity capture** at checkout, with an urgency indicator in the dashboard for production timelines.
+10. **Catalogue change history** for price and volume-tier edits, to prevent silent pricing disputes.
+11. **Low-stock and "inquire for timeline" alerts** surfaced in the operations dashboard.
+12. **Paystack**, only when the owner asks: mirror the Stripe webhook contract exactly — raw-body `x-paystack-signature` verification, same idempotency, same amount/currency gate.
 
 ## 8. Definition of done for every task
 
