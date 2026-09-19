@@ -66,14 +66,14 @@ export const VERTICALS: {
 }[] = [
   {
     key: "Fabrics",
-    label: "The Edit Co. RTW.",
+    label: "Ankara Fabrics and ready-to-wear",
     blurb: "Ankara fabrics and ready-to-wear — 3-yard cotton wax bundles, cut and finished in-house.",
     instagram: "https://www.instagram.com/theeditco.rtw",
     handle: "theeditco.rtw",
   },
   {
     key: "Ready-to-Wear",
-    label: "The Edit Co.",
+    label: "Curated Thrift & Vintage fashion",
     blurb: "Curated thrift and vintage fashion — one-of-one pieces, inspected and steamed before dispatch.",
     instagram: "https://www.instagram.com/theeditco.ng",
     handle: "theeditco.ng",
@@ -92,8 +92,8 @@ export const DELIVERY_FEE: Record<Currency, number> = { NGN: 3500, GBP: 18 };
 
 export const CATEGORIES: { key: Category | "All"; label: string; blurb: string }[] = [
   { key: "All", label: "All Pieces", blurb: "The complete Gedhe Couture selection" },
-  { key: "Fabrics", label: "The Edit Co. RTW.", blurb: "Ankara fabrics & ready-to-wear" },
-  { key: "Ready-to-Wear", label: "The Edit Co.", blurb: "Curated thrift & vintage fashion" },
+  { key: "Fabrics", label: "ANKARA FABRICS.", blurb: "Ankara fabrics & ready-to-wear" },
+  { key: "Ready-to-Wear", label: "THRIFT & VINTAGE", blurb: "Curated thrift & vintage fashion" },
   { key: "Asoebi", label: "Asoebi Bulk Supply", blurb: "Event coordination specials" },
 ];
 
